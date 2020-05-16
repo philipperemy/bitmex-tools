@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='bitmex-tools',
-    version='1.0',
+    version='1.1',
     description='Bitmex Tools',
     author='Philippe Remy',
     license='MIT',
