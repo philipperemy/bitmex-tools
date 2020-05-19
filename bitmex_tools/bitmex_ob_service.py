@@ -34,13 +34,14 @@ class BitmexWaitForTick:
 
 class BitmexOrderBookService:
 
-    def __init__(self, depth=5):
+    def __init__(self, symbol='XBTUSD', depth=5):
         self.cumsum_bid_volumes = None
         self.cumsum_ask_volumes = None
         self.a = None
         self.b = None
         self.ob = None
         self.mp = None
+        self.symbol = symbol
         self.depth = depth
         self.thread = threading.Thread(target=self.run)
         self.thread.start()
@@ -77,7 +78,7 @@ class BitmexOrderBookService:
     def run(self):
         while True:
             try:
-                ws = BitMEXWebsocket(endpoint='wss://www.bitmex.com/realtime', symbol='XBTUSD')
+                ws = BitMEXWebsocket(endpoint='wss://www.bitmex.com/realtime', symbol=self.symbol)
                 while ws.ws.sock.connected:
                     try:
                         ob = ws.market_depth()
