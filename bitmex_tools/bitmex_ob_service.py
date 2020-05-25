@@ -17,6 +17,8 @@ class FastTickerBitmex:
 
     def __init__(self, symbol):
         self.socket = l2(endpoint=ENDPOINT, symbol=symbol)
+        while self.bbo() is None:
+            sleep(0.001)
 
     def bbo(self):
         return self.socket.order_book_l2.bbo()
