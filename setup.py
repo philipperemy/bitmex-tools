@@ -1,14 +1,14 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(
     name='bitmex-tools',
-    version='1.4',
+    version='1.5',
     description='Bitmex Tools',
     author='Philippe Remy',
     license='MIT',
     long_description_content_type='text/markdown',
     long_description=open('README.md').read(),
-    packages=['bitmex_tools'],
+    packages=find_packages(),
     install_requires=[
         'numpy',
         'pandas',
