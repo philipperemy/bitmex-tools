@@ -7,7 +7,7 @@ logger = logging.getLogger(__name__)
 
 
 def main():
-    bit = BitmexOrderBookService()
+    bit = BitmexOrderBookService(symbol='XBTU20')
     while True:
         # just for pretty printing.
         bid_volume, ask_volume = bit.get_bbo_volumes()

@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='bitmex-tools',
-    version='1.2',
+    version='1.3',
     description='Bitmex Tools',
     author='Philippe Remy',
     license='MIT',
@@ -12,6 +12,7 @@ setup(
     install_requires=[
         'numpy',
         'pandas',
+        'sortedcontainers',
         'websocket-client==0.47.0'
     ]
 )
