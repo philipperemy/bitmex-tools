@@ -5,9 +5,21 @@ from time import sleep, time
 import numpy as np
 import pandas as pd
 
-from bitmex_tools.bitmex_socket import BitMEXWebsocket
+from bitmex_tools.sockets.bitmex_socket_orderbook10 import BitMEXWebsocket as ob10
+from bitmex_tools.sockets.bitmex_socket_orderbookL2 import BitMEXWebsocket as l2
 
 logger = logging.getLogger(__name__)
+
+ENDPOINT = 'wss://www.bitmex.com/realtime'
+
+
+class FastTickerBitmex:
+
+    def __init__(self, symbol):
+        self.socket = l2(endpoint=ENDPOINT, symbol=symbol)
+
+    def bbo(self):
+        return self.socket.order_book_l2.bbo()
 
 
 class BitmexWaitForTick:
@@ -78,7 +90,7 @@ class BitmexOrderBookService:
     def run(self):
         while True:
             try:
-                ws = BitMEXWebsocket(endpoint='wss://www.bitmex.com/realtime', symbol=self.symbol)
+                ws = ob10(endpoint=ENDPOINT, symbol=self.symbol)
                 while ws.ws.sock.connected:
                     try:
                         ob = ws.market_depth()
@@ -94,15 +106,3 @@ class BitmexOrderBookService:
                 logger.exception('Received exception in the Bitmex WS.')
                 sleep(10)
                 logger.info('Trying to restart the WS...')
-
-
-def main():
-    t = BitmexOrderBookService()
-    tick = BitmexWaitForTick(t)
-    while True:
-        is_tick = tick.wait(1)
-        print(int(time()), 'tick' if is_tick else '-', t.get_mp())
-
-
-if __name__ == '__main__':
-    main()

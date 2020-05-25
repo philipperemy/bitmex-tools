@@ -8,8 +8,6 @@ from urllib.parse import urlunparse, urlparse
 
 import websocket
 
-from bitmex_tools.utils import generate_nonce, generate_signature
-
 logger = logging.getLogger(__name__)
 
 
@@ -96,12 +94,13 @@ class BitMEXWebsocket:
         """Connect to the websocket in a thread."""
         logger.debug("Starting thread")
 
-        self.ws = websocket.WebSocketApp(wsURL,
-                                         on_message=self.__on_message,
-                                         on_close=self.__on_close,
-                                         on_open=self.__on_open,
-                                         on_error=self.__on_error,
-                                         header=self.__get_auth())
+        self.ws = websocket.WebSocketApp(
+            wsURL,
+            on_message=self.__on_message,
+            on_close=self.__on_close,
+            on_open=self.__on_open,
+            on_error=self.__on_error
+        )
 
         self.wst = threading.Thread(target=lambda: self.ws.run_forever())
         self.wst.daemon = True
@@ -117,22 +116,6 @@ class BitMEXWebsocket:
             logger.error("Couldn't connect to WS! Exiting.")
             self.exit()
             raise websocket.WebSocketTimeoutException('Couldn\'t connect to WS! Exiting.')
-
-    def __get_auth(self):
-        """Return auth headers. Will use API Keys if present in settings."""
-        if self.api_key:
-            logger.info("Authenticating with API Key.")
-            # To auth to the WS using an API key, we generate a signature of a nonce and
-            # the WS API endpoint.
-            nonce = generate_nonce()
-            return [
-                "api-nonce: " + str(nonce),
-                "api-signature: " + generate_signature(self.api_secret, 'GET', '/realtime', nonce, ''),
-                "api-key:" + self.api_key
-            ]
-        else:
-            logger.info("Not authenticating.")
-            return []
 
     def __get_url(self):
         """
