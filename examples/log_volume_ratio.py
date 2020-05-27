@@ -11,7 +11,7 @@ def main():
     while True:
         # just for pretty printing.
         bid_volume, ask_volume = bit.get_bbo_volumes()
-        log_volume_ratio = bit.get_ratio()
+        log_volume_ratio = bit.get_ratio(depth=5)
         if log_volume_ratio > 0:
             log_volume_ratio = f'+{log_volume_ratio:.3f}'
         else:

@@ -74,10 +74,11 @@ class BitmexOrderBookService:
     def get_bbo_volumes(self):
         return self.b[0, 1], self.a[0, 1]
 
-    def get_ratio(self):
+    def get_ratio(self, depth=1):
         if self.cumsum_bid_volumes is None or self.cumsum_ask_volumes is None:
             return None
-        return np.log(self.cumsum_bid_volumes[-1]) - np.log(self.cumsum_ask_volumes[-1])
+        assert 0 <= depth - 1 < len(self.cumsum_bid_volumes)
+        return np.log(self.cumsum_bid_volumes[depth - 1]) - np.log(self.cumsum_ask_volumes[depth - 1])
 
     def get_ob(self):
         bids = np.transpose(np.vstack([self.b[:, 0], self.cumsum_bid_volumes]))
