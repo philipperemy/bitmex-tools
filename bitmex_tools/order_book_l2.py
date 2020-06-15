@@ -30,7 +30,9 @@ class OrderBookL2:
         best_ask = self.best_ask
         if best_bid is None or best_ask is None:
             return None
-        assert best_bid <= best_ask
+        if best_ask <= best_bid:
+            best_ask = best_bid + 0.5
+        # assert best_bid <= best_ask
         return best_bid, best_ask
 
     @property
