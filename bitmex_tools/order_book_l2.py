@@ -1,5 +1,5 @@
 import logging
-from time import time
+from time import time, sleep
 
 from sortedcontainers import SortedDict
 
@@ -37,17 +37,21 @@ class OrderBookL2:
 
     @property
     def best_bid(self):
-        try:
-            return self.bid_order_book.peekitem(0)[-1][-1]
-        except (IndexError, KeyError):
-            return None
+        for i in range(100):
+            try:
+                return self.bid_order_book.peekitem(0)[-1][-1]
+            except (IndexError, KeyError):
+                sleep(0.001)
+        return None
 
     @property
     def best_ask(self):
-        try:
-            return self.ask_order_book.peekitem(-1)[-1][-1]
-        except (IndexError, KeyError):
-            return None
+        for i in range(100):
+            try:
+                return self.ask_order_book.peekitem(-1)[-1][-1]
+            except (IndexError, KeyError):
+                sleep(0.001)
+        return None
 
     def update(self, row):
         book = self.fetch_queue(row)
