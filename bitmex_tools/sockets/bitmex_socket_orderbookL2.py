@@ -7,6 +7,7 @@ from time import sleep
 from urllib.parse import urlunparse, urlparse
 
 import websocket
+
 from bitmex_tools.order_book_l2 import OrderBookL2
 
 logger = logging.getLogger(__name__)
@@ -134,10 +135,14 @@ class BitMEXWebsocket:
 
     def __on_error(self, ws, error):
         """Called on fatal websocket errors. We exit on these."""
-        print('Bitmex socket had a problem', self.symbol)
-        if not self.exited:
-            logger.error('Error : %s' % error)
-            raise websocket.WebSocketException(error)
+        print('Bitmex socket had a problem', self.symbol, error)
+        wsURL = self.__get_url()
+        print('Connecting to %s' % wsURL)
+        self.__connect(wsURL)
+        print('Connected to WS.')
+        # if not self.exited:
+        #     logger.error('Error : %s' % error)
+        #     raise websocket.WebSocketException(error)
 
     def __on_open(self, ws):
         """Called when the WS opens."""
